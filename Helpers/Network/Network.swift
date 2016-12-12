@@ -10,7 +10,7 @@ import Foundation
 
 class Network {
     
-    public class func make(request: NSMutableURLRequest, method: HTTPMethod, completion: @escaping (_ success: Bool, _ object: AnyObject?) -> ()) {
+    class func make(request: NSMutableURLRequest, method: HTTPMethod, completion: @escaping (_ success: Bool, _ object: AnyObject?) -> ()) {
         
         request.httpMethod = method.rawValue
         
@@ -26,21 +26,36 @@ class Network {
         }.resume()
     }
     
-    public class func get(with request: NSMutableURLRequest, completion: @escaping (_ success: Bool, _ object: AnyObject?) -> ()) {
+    class func get(with request: NSMutableURLRequest, completion: @escaping (_ success: Bool, _ object: AnyObject?) -> ()) {
         make(request: request, method: HTTPMethod.get, completion: completion)
     }
     
-    public class func get(with url: URL, completion: @escaping (_ success: Bool, _ object: AnyObject?) -> ()) {
+    class func get(with url: URL, completion: @escaping (_ success: Bool, _ object: AnyObject?) -> ()) {
         make(request: NSMutableURLRequest(url: url), method: HTTPMethod.get, completion: completion)
     }
     
-    public class func post(with request: NSMutableURLRequest, completion: @escaping (_ success: Bool, _ object: AnyObject?) -> ()) {
+    class func post(with request: NSMutableURLRequest, completion: @escaping (_ success: Bool, _ object: AnyObject?) -> ()) {
         make(request: request, method: HTTPMethod.post, completion: completion)
     }
     
-    public class func put(with request: NSMutableURLRequest, completion: @escaping (_ success: Bool, _ object: AnyObject?) -> ()) {
+    class func put(with request: NSMutableURLRequest, completion: @escaping (_ success: Bool, _ object: AnyObject?) -> ()) {
         make(request: request, method: HTTPMethod.put, completion: completion)
     }
     
 }
 
+
+// MARK: - Request methods
+
+public func postRequest(with url: URL, parameters: [String : String], headerFields: [String:String]? = nil ) -> NSMutableURLRequest {
+    
+    let request = NSMutableURLRequest(url: url)
+    
+    if let headerFields = headerFields {
+        request.allHTTPHeaderFields = headerFields
+    }
+    
+    request.httpBody = parameters.stringFromHttpParameters().data(using: String.Encoding.utf8)
+    
+    return request
+}
